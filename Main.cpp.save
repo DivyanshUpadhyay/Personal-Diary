@@ -1,0 +1,282 @@
+#include<iostream>
+#include<stdio.h>
+#include<string.h>
+#include<direct.h>
+#include<fstream>
+#include<windows.h>
+#include<conio.h>
+#include<string>
+using namespace std;
+    string fname,lname,password,userid;
+class Personal_Diary
+{
+      public:
+    Personal_Diary()
+    {
+    char details_of_Project[]="This Project is Developed by Divyansh Upadhyay";
+    }
+
+void gotoxy(int a,int b)
+{
+    COORD c;
+    c.X=a;
+    c.Y=b;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
+}
+void color(int color_num)
+{
+    int input=color_num;
+      HANDLE h= GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h,input);
+}
+void delay()
+{
+    for(int j=1;j<100000000;j++)
+    {
+        j++;
+        j--;
+    }
+}
+void new_user()
+{
+    system("cls");
+    gotoxy(41,0);
+    color(8);
+    char a[]="WELCOME TO NEW USER SECTION";
+    for(int i=0;i<strlen(a);i++)
+    {
+        for(int j=0;j<7000000;j++)
+        {
+        j++;j--;
+        }
+        cout<<a[i];
+    }
+    gotoxy(41,1);
+     for(int i=0;i<strlen(a);i++)
+    {
+        for(int j=0;j<7000000;j++)
+        {
+        j++;j--;
+        }
+        cout<<"-";
+    }
+    gotoxy(10,3);
+    fstream file;
+    file.open("Login.docx",ios::in);
+    int found=0,i=0;
+    string name1,name2,name3;
+    if(file.fail())
+    {
+        gotoxy(0,4);
+        cout<<"This Program is Running for the first time and You are the first user here\n";
+        gotoxy(10,5);
+        cout<<"Enter Your First Name : ";
+        cin.ignore();
+        getline(cin,name1);
+        gotoxy(10,6);
+         cout<<"Enter Your last Name : ";
+        getline(cin,name2);
+            gotoxy(10,7);
+    cout<<"Enter Your UserId : ";
+    getline(cin,name3);
+    }
+    else
+    {
+         gotoxy(10,5);
+        cout<<"Enter Your First Name : ";
+        cin.ignore();
+        getline(cin,name1);
+        gotoxy(10,6);
+         cout<<"Enter Your last Name : ";
+        getline(cin,name2);
+            gotoxy(10,7);
+    cout<<"Enter Your UserId : ";
+    getline(cin,name3);
+        while(1)
+        {
+            file>>fname>>lname>>userid>>password;
+            if(file.eof())
+            {
+                break;
+            }
+            int r=name1.compare(fname);
+            int d=name2.compare(lname);
+            int e=name3.compare(userid);
+            if((r==0&&d==0)||(r==0&&d==0&&e==0)||e==0)
+            {
+                found=1;
+                cout<<"This User is Already Exits.\n";
+            }
+        }
+    }
+    file.close();
+    fstream file1;
+    if(found==0)
+    {
+        file1.open("Login.docx",ios::app);
+      fname=name1;
+      lname=name2;
+      userid=name3;
+    file1<<fname<<' '<<lname<<' '<<userid<<' ';
+    gotoxy(10,8);
+    cout<<"Enter Your Password : ";
+    getline(cin,password);
+    file1<<password<<endl;
+    file1.close();
+    }
+     gotoxy(10,10);
+    cout<<"Thank You For Registration";
+     gotoxy(10,11);
+     cout<<"Your Account has been created.";
+     gotoxy(40,13);
+     cout<<"Please wait while we are saving your details to the system";
+     for(int i=0;i<10;i++)
+     {
+         delay();
+         cout<<"*";
+     }
+}
+void diary()
+{
+    mkdir("C:/Personal_Diary/Files/Stories");
+    fstream file,f;
+    file.open("C:/Personal_Diary/File1.txt",ios::app);
+    getch();
+}
+void login()
+{
+    system("cls");
+    gotoxy(41,0);
+    color(8);
+    char a[]="WELCOME TO LOGIN SECTION";
+    for(int i=0;i<strlen(a);i++)
+    {
+        for(int j=0;j<7000000;j++)
+        {
+        j++;j--;
+        }
+        cout<<a[i];
+    }
+    gotoxy(41,1);
+     for(int i=0;i<strlen(a);i++)
+    {
+        for(int j=0;j<7000000;j++)
+        {
+        j++;j--;
+        }
+        cout<<"-";
+    }
+    gotoxy(10,4);
+    fstream file;
+    file.open("Login.docx",ios::in);
+    int found=0,i=0;
+    string lid,lpass;
+    if(file.fail())
+    {
+        cout<<"No user is Registered Please Register First And Try again.";
+        gotoxy(10,5);
+        cout<<"Press any Key to Continue";
+        getch();
+    }
+    else
+    {
+        cout<<"Enter Your UserID : ";
+        cin.ignore();
+        getline(cin,lid);
+        while(1)
+        {
+            file>>fname>>lname>>userid>>password;
+            if(file.eof())
+            {
+                break;
+            }
+            int r = lid.compare(userid);
+            if(r==0)
+            {
+                found=1;
+            }
+        }
+        file.close();
+        if(found == 1)
+        {
+            gotoxy(10,5);
+            cout<<"Enter Password : ";
+            getline(cin,lpass);
+            file.open("Login.docx",ios::in);
+            while(1)
+            {
+                file>>fname>>lname>>userid>>password;
+                if(file.eof())
+                {
+                    break;
+                }
+                int s=lpass.compare(password);
+                if(s==0)
+                {
+                    i=1;
+                }
+            }
+            file.close();
+            if(i==1)
+            {
+                gotoxy(10,7);
+                cout<<"Login Success ";
+                for(int o=0;o<10;o++)
+                {
+                    for(int w=1;w<9000000;w++)
+                    {
+                        w++;w--;
+                    }
+                    cout<<"*";
+                }
+                diary();
+            }
+
+        }
+    }
+}
+void driver()
+{
+    int i,j;
+     while(true)
+    {
+    system("cls");
+    gotoxy(41,0);
+    color(33);
+    char a[]="Welcome to Your Personal Diary";
+    cout<<a;
+    color(07);
+        gotoxy(10,3);
+        cout<<"Press 1 to Create a Diary for you";
+        gotoxy(10,4);
+        cout<<"Press 2 to Write down in a Diary";
+        gotoxy(10,5);
+        cout<<"Press 3 to Login as Admin";
+        gotoxy(10,6);
+        cout<<"Press 4 to exit";
+        gotoxy(10,8);
+        cout<<"------------------------------------------";
+        gotoxy(10,9);
+        cin>>i;
+    switch(i)
+        {
+        case 1 : new_user();
+        break;
+
+        case 2:login();
+        break;
+
+        case 3:exit(0);
+        break;
+
+        case 4: exit(0);
+        break;
+        }
+    }
+}
+};
+int main()
+{
+    Personal_Diary t;
+    t.driver();
+}
