@@ -22,6 +22,7 @@ using namespace std;
 
 class Personal_Diary
 {
+    
       public:
     Personal_Diary()
     {
@@ -330,6 +331,73 @@ void diary()
         delay();
     }
 }
+ void readDiary() {
+        system("cls");
+        color(9);
+        gotoxy(77, 0);
+        auto t = chrono::system_clock::to_time_t(chrono::system_clock::now());
+        cout << ctime(&t);
+        gotoxy(41, 1);
+        color(07);
+        cout << "Welcome To The Reading Section";
+        gotoxy(40, 5);
+
+        string ddd, folder, uid;
+        int found = 0, found1 = 0;
+
+        cout << "Enter Date of incident(dd-mm-yyyy) : ";
+        cin >> ddd;
+        gotoxy(10, 14);
+        cout << "Enter your fullname(Without space) : ";
+        cin.ignore();
+        getline(cin, folder);
+        gotoxy(10, 15);
+        cout << "Enter your user-id again :  ";
+        cin >> uid;
+
+        fstream file;
+        file.open("c:/Personal_Diary/Files/Login/Login.o", ios::in);
+
+        while (1) {
+            file >> fname >> lname >> userid >> password;
+            if (file.eof()) {
+                break;
+            }
+            if (userid == uid) {
+                found = 1;
+            }
+            if (folder == (fname + lname)) {
+                found1 = 1;
+            }
+        }
+
+        file.close();
+
+        if (found == 1 && found1 == 1) {
+            system("cls");
+            color(1);
+            string a = "c:/Personal_Diary/Files/Stories/";
+            string b = a + folder + "/";
+            file.open(b + ddd + ".o", ios::in);
+
+            if (file) {
+                string line;
+                while (getline(file, line)) {
+                    cout << line << endl;
+                }
+            } else {
+                cout << "No record found for the specified date." << endl;
+            }
+
+            file.close();
+        } else {
+            cout << "User does not exist." << endl;
+            delay();
+        }
+
+        cout << "\nPress any key to continue...";
+        getch();
+    }
 void login()
 {
     system("cls");
@@ -426,6 +494,130 @@ void login()
         }
     }
 }
+void viewLoginHistory() {
+    system("cls");
+    color(9);
+    gotoxy(60,0);
+    cout<<"User Login History";
+    gotoxy(60,1);
+    cout<<"---------------------------------";
+
+    fstream historyFile;
+    historyFile.open("c:/Personal_Diary/Files/Login/Login_history.o", ios::in);
+
+    if (!historyFile) {
+        cout << "No login history available." << endl;
+    } else {
+        string line;
+        while (getline(historyFile, line)) {
+            cout << line << endl;
+        }
+        historyFile.close();
+    }
+
+    cout << "\nPress any key to continue...";
+    getch();
+}
+
+void manageUserAccounts() {
+    while (true) {
+        system("cls");
+        color(9);
+        gotoxy(60,0);
+        cout<<"Manage User Accounts";
+        gotoxy(60,1);
+        cout<<"---------------------------------";
+        gotoxy(40,5);
+        cout<<"1. View All User Accounts";
+        gotoxy(40,6);
+        cout<<"2. Delete User Account";
+        gotoxy(40,7);
+        cout<<"3. Back to Master Admin Panel";
+        gotoxy(40,10);
+
+        int choice;
+        cout<<"Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: viewAllUserAccounts();
+                    break;
+            case 2: deleteUserAccount();
+                    break;
+            case 3: return;
+                    break;
+            default: cout<<"Invalid choice!";
+                     break;
+        }
+    }
+}
+
+void viewAllUserAccounts() {
+    system("cls");
+    color(9);
+    gotoxy(60,0);
+    cout<<"All User Accounts";
+    gotoxy(60,1);
+    cout<<"---------------------------------";
+
+    fstream userFile;
+    userFile.open("c:/Personal_Diary/Files/Login/Login.o", ios::in);
+
+    if (!userFile) {
+        cout << "No user accounts available." << endl;
+    } else {
+        string line;
+        while (getline(userFile, line)) {
+            cout << line << endl;
+        }
+        userFile.close();
+    }
+
+    cout << "\nPress any key to continue...";
+    getch();
+}
+
+void deleteUserAccount() {
+    system("cls");
+    color(9);
+    gotoxy(60,0);
+    cout<<"Delete User Account";
+    gotoxy(60,1);
+    cout<<"---------------------------------";
+
+    string userId;
+    cout << "Enter User ID to delete: ";
+    cin >> userId;
+
+    fstream userFile, tempFile;
+    userFile.open("c:/Personal_Diary/Files/Login/Login.o", ios::in);
+    tempFile.open("c:/Personal_Diary/Files/Login/tempLogin.o", ios::out);
+
+    bool userFound = false;
+    string line;
+    while (getline(userFile, line)) {
+        if (line.find(userId) == string::npos) {
+            tempFile << line << endl;
+        } else {
+            userFound = true;
+        }
+    }
+
+    userFile.close();
+    tempFile.close();
+
+    if (!userFound) {
+        cout << "User not found." << endl;
+    } else {
+        remove("c:/Personal_Diary/Files/Login/Login.o");
+        rename("c:/Personal_Diary/Files/Login/tempLogin.o", "c:/Personal_Diary/Files/Login/Login.o");
+        cout << "User account deleted successfully." << endl;
+    }
+
+    cout << "\nPress any key to continue...";
+    getch();
+}
+
 void admin()
 {
     system("cls");
@@ -535,30 +727,38 @@ void admin()
 }
 void Madminpanel()
 {
-    system("cls");
-    color(9);
-    gotoxy(60,0);
-    cout<<"Welcome to Master Admin Panel";
-    gotoxy(60,1);
-    cout<<"---------------------------------";
-    gotoxy(40,10);
-    getch();
-}
-void RD()
-{
-    system("cls");
-    gotoxy(77,0);
-    color(9);
-    auto t = chrono::system_clock::to_time_t(chrono::system_clock::now());
-    cout<<ctime(&t);
-    //cout<<"Date and Time : ";printf("%02d/%02d/%d    %02d:%02d ",dd,mm,yy,hh,m,ap);cout<<ap;
-    gotoxy(41,1);
-    color(07);
-    cout<<"Welcome To The Reading Section";
-    gotoxy(40,5);
-    
-    getch();
-}
+    while (true) {
+        system("cls");
+        color(9);
+        gotoxy(60,0);
+        cout<<"Welcome to Master Admin Panel";
+        gotoxy(60,1);
+        cout<<"---------------------------------";
+        gotoxy(40,5);
+        cout<<"1. View User Login History";
+        gotoxy(40,6);
+        cout<<"2. Manage User Accounts";
+        gotoxy(40,7);
+        cout<<"3. Exit";
+        gotoxy(40,10);
+
+        int choice;
+        cout<<"Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: viewLoginHistory();
+                    break;
+            case 2: manageUserAccounts();
+                    break;
+            case 3: exit(0);
+                    break;
+            default: cout<<"Invalid choice!";
+                     break;
+        }
+    }
+}   
+
 void driver()
 {
     int i,j;
@@ -614,7 +814,7 @@ void driver()
         case 4: exit(0);
         break;
 
-        case 5: RD();
+        case 5: readDiary();
         break;
 
         case 6: exit(0);
